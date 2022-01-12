@@ -18,6 +18,7 @@
 #ifndef _GAZEBO_CONVEYOR_BELT_PLUGIN_HH_
 #define _GAZEBO_CONVEYOR_BELT_PLUGIN_HH_
 
+
 #include <gazebo/common/Event.hh>
 #include <gazebo/common/Plugin.hh>
 #include <gazebo/physics/Joint.hh>
@@ -27,7 +28,6 @@
 #include <gazebo/util/system.hh>
 #include <ignition/math/Angle.hh>
 #include <sdf/sdf.hh>
-
 namespace gazebo
 {
   /// \brief A plugin for simulating a conveyor belt.

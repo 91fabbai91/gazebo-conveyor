@@ -24,8 +24,13 @@
 #include "ConveyorBeltPlugin.hh"
 
 // ROS
-#include <gazebo_conveyor/ConveyorBeltControl.h>
-#include <ros/ros.h>
+#include <gazebo_ros/node.hpp>
+#include "gazebo_conveyor/srv/conveyor_belt_control.hpp"
+#include "gazebo_conveyor/msg/conveyor_belt_state.hpp"
+#include "std_srvs/srv/empty.hpp"
+#include "std_msgs/msg/u_int64.hpp"
+#include "rclcpp/rclcpp.hpp"
+#include "rclcpp/logging.hpp"
 
 namespace gazebo
 {
@@ -46,10 +51,9 @@ namespace gazebo
     /// \brief Receives requests on the conveyor belt's topic.
     /// \param[in] _req The desired state of the conveyor belt.
     /// \param[in] _res If the service succeeded or not.
-    public: bool OnControlCommand(ros::ServiceEvent<
-      gazebo_conveyor::ConveyorBeltControl::Request,
-      gazebo_conveyor::ConveyorBeltControl::Response> & event);
+    public: void OnControlCommand(std::shared_ptr<gazebo_conveyor::srv::ConveyorBeltControl::Request> request, std::shared_ptr<gazebo_conveyor::srv::ConveyorBeltControl::Response> response);
 
+    public: void SubscriberCallback(const std::shared_ptr<std_srvs::srv::Empty::Request> request, std::shared_ptr<std_srvs::srv::Empty::Response> response);
     // Documentation inherited.
     private: virtual void Publish() const;
 
@@ -57,13 +61,15 @@ namespace gazebo
     private: std::string robotNamespace_;
 
     /// \brief ros node handle
-    private: ros::NodeHandle *rosnode_;
+    //private: std::shared_ptr<rclcpp::Node> rosnode_;
+    private: gazebo_ros::Node::SharedPtr rosnode_;
 
     /// \brief Receives service calls to control the conveyor belt.
-    public: ros::ServiceServer controlService_;
+    public: rclcpp::Service<gazebo_conveyor::srv::ConveyorBeltControl>::SharedPtr controlService_;
+    public: rclcpp::Service<std_srvs::srv::Empty>::SharedPtr MySubscriber;
 
     /// \brief Publishes the state of the conveyor.
-    public: ros::Publisher statePub;
+    public: rclcpp::Publisher<gazebo_conveyor::msg::ConveyorBeltState>::SharedPtr statePub;
   };
 }
 #endif
